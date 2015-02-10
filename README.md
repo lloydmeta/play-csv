@@ -1,4 +1,4 @@
-# CSV Seq binders for Play [![Build Status](https://travis-ci.org/lloydmeta/play-csv.svg?branch=master)](https://travis-ci.org/lloydmeta/play-csv) [![Coverage Status](https://coveralls.io/repos/lloydmeta/play-csv/badge.svg)](https://coveralls.io/r/lloydmeta/play-csv)
+# CSV Seq binders for Play [![Build Status](https://travis-ci.org/lloydmeta/play-csv.svg?branch=master)](https://travis-ci.org/lloydmeta/play-csv) [![Coverage Status](https://coveralls.io/repos/lloydmeta/play-csv/badge.svg?branch=master)](https://coveralls.io/r/lloydmeta/play-csv?branch=master)
 
 If you're reading this, you probably know what you want: CSV path, query and form binders for
 your Play application.
