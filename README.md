@@ -1,4 +1,4 @@
-# CSV Seq binders for Play
+# CSV Seq binders for Play [![Build Status](https://travis-ci.org/lloydmeta/play-csv.svg?branch=master)](https://travis-ci.org/lloydmeta/play-csv) [![Coverage Status](https://coveralls.io/repos/lloydmeta/play-csv/badge.svg)](https://coveralls.io/r/lloydmeta/play-csv)
 
 If you're reading this, you probably know what you want: CSV path, query and form binders for
 your Play application.
@@ -6,13 +6,14 @@ your Play application.
 You know why you want it:
 
 - Smaller URLS
+- Guaranteed ordering
 - You want to
 
 ## SBT
 
 ```scala
 libraryDependencies ++= Seq(
-    "com.beachape" %% "play-csv" % "10.0.1"
+    "com.beachape" %% "play-csv" % "0.0.1"
 )
 ```
 
