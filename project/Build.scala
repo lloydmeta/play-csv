@@ -7,13 +7,12 @@ import scalariform.formatter.preferences._
 
 object Build extends Build {
 
-  lazy val theVersion = "1.0-SNAPSHOT"
+  lazy val theVersion = "1.0"
   lazy val theScalaVersion = "2.11.5"
 
   lazy val root = Project(id = "root", base = file("."), settings = commonWithPublishSettings)
     .settings(
       name := "play-csv",
-      publishArtifact := false,
       crossScalaVersions := Seq("2.10.4", "2.11.5"),
       crossVersion := CrossVersion.binary,
       libraryDependencies ++= Seq(

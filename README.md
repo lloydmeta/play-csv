@@ -13,7 +13,7 @@ You know why you want it:
 
 ```scala
 libraryDependencies ++= Seq(
-    "com.beachape" %% "play-csv" % "0.0.1"
+    "com.beachape" %% "play-csv" % "1.0"
 )
 ```
 
