@@ -61,7 +61,7 @@ object Build extends Build {
 
   lazy val publishSettings = Seq(
     pomExtra :=
-      <url>https://github.com/lloydmeta/enumeratum</url>
+      <url>https://github.com/lloydmeta/play-csv</url>
       <licenses>
         <license>
           <name>MIT</name>
@@ -70,8 +70,8 @@ object Build extends Build {
         </license>
       </licenses>
       <scm>
-        <url>git@github.com:lloydmeta/enumeratum.git</url>
-        <connection>scm:git:git@github.com:lloydmeta/enumeratum.git</connection>
+        <url>git@github.com:lloydmeta/play-csv.git</url>
+        <connection>scm:git:git@github.com:lloydmeta/play-csv.git</connection>
       </scm>
       <developers>
         <developer>
