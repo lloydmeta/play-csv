@@ -1,0 +1,4 @@
+GET        /                    controllers.Application.queryParams(ids: Csv[Int])
+GET        /form                controllers.Application.showForm
+GET        /:ids                controllers.Application.pathParams(ids: Csv[Int])
+POST       /form                controllers.Application.postForm
