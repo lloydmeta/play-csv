@@ -7,7 +7,7 @@ import scalariform.formatter.preferences._
 
 object Build extends Build {
 
-  lazy val theVersion = "1.1"
+  lazy val theVersion = "1.2-SNAPSHOT"
   lazy val theScalaVersion = "2.11.5"
 
   lazy val root = Project(id = "root", base = file("."), settings = commonWithPublishSettings)
