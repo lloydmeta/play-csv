@@ -5,6 +5,7 @@ import play.api.data.Forms._
 import play.api.data.format.Formatter
 import play.api.data.{ Forms, FormError, Mapping }
 import play.api.data.format.Formats
+import play.api.libs.json._
 import play.api.mvc.{ PathBindable, QueryStringBindable }
 
 import scala.util.{ Success, Failure, Try }
@@ -28,13 +29,66 @@ object Csv {
   val Empty = Csv[Nothing]()
 
   /**
+   * Json [[Reads]] for a Csv of type A
+   */
+  def csvReads[A: Reads]: Reads[Csv[A]] = new Reads[Csv[A]] {
+
+    def reads(json: JsValue): JsResult[Csv[A]] = json match {
+      case JsString(s) => {
+        val tryCsvSeq = Try {
+          /*
+           JsStrings will fail to work with Json.parse here unless explicitly surrounded in quotes,
+           making it fairly useless to have Json deseralisation of Csv
+            */
+          val jsResults = split(s, ',').map(sElem => implicitly[Reads[A]].reads(Json.parse(unescapeCsv(trim(sElem)))))
+          val (successes, errors) = jsResults.partition(_.isSuccess)
+          if (errors.nonEmpty) {
+            errors.foldLeft(JsError(Seq.empty)) { case (JsError(existingE), JsError(nextE)) => JsError(existingE ++ nextE) }
+          } else {
+            val boundElems = successes.map { case JsSuccess(r, _) => r }
+            val test = JsSuccess(Csv(boundElems: _*))
+            test
+          }
+        }
+        tryCsvSeq match {
+          case Success(jsResult) => jsResult
+          case Failure(e) => JsError(s"Could not bind $json into a Csv")
+        }
+
+      }
+      case _ => JsError(s"Could not bind $json into a Csv because it is not a string")
+    }
+  }
+
+  /**
+   * Json [[Writes]] for a Csv of type A
+   */
+  def csvWrites[A: Writes]: Writes[Csv[A]] = new Writes[Csv[A]] {
+    def writes(o: Csv[A]): JsValue = {
+      val elemJsons = o.toSeq.map { elem =>
+        val jsValue = Json.toJson(elem)
+        /*
+          Likewise, writing JsStrings will result in things being surrounded in quotes, making it fairly ugly
+        */
+        escapeCsv(jsValue.toString())
+      }
+      JsString(elemJsons.mkString(","))
+    }
+  }
+
+  /**
+   * Json [[Format]] for a Csv of type A
+   */
+  implicit def formats[A](implicit elemWriter: Writes[A], elemReader: Reads[A]): Format[Csv[A]] = Format(csvReads[A], csvWrites[A])
+
+  /**
    * Given a mapping for a Play Form, returns one that works with [[Csv]]
    *
    * Pretty useless..just stick with [[seq]] unless if you really want to have a [[Csv]]
    *
    * Example:
    * {{{
-   * Form("hello" -> CsvSeq.mapping(number))
+   * Form("hello" -> Csv.mapping(number))
    * }}}
    */
   def mapping[A](mapping: Mapping[A]): Mapping[Csv[A]] = Forms.of(formatter(mapping))
@@ -86,7 +140,7 @@ object Csv {
       }
       tryCsvSeq match {
         case Success(csv) => Right(csv)
-        case Failure(e) => Left(s"Could not bind $value into a CsvSeq")
+        case Failure(e) => Left(s"Could not bind $value into a Csv")
       }
     }
 
@@ -110,7 +164,7 @@ object Csv {
       }
       tryBind match {
         case Success(Right(csvSeq)) => Right(csvSeq)
-        case _ => Left(Seq(FormError(key, "Could not bind CsvSeq", Nil)))
+        case _ => Left(Seq(FormError(key, "Could not bind Csv", Nil)))
       }
     }
 

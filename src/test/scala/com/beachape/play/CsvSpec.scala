@@ -3,6 +3,7 @@ package com.beachape.play
 import org.scalatest.{ Matchers, FunSpec }
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.libs.json.{ Json, JsNumber, JsString }
 
 class CsvSpec extends FunSpec with Matchers {
 
@@ -72,6 +73,34 @@ class CsvSpec extends FunSpec with Matchers {
       r2 shouldBe Map("hello" -> "1")
 
     }
+  }
+
+  describe("Json serdes") {
+
+    it("should deserialise a proper Json CSV") {
+      val js1 = JsString("1,2,3")
+      val js2 = JsString("a,b,c")
+      val des1 = js1.as[Csv[Int]]
+      val des2 = js2.as[Csv[String]]
+      des1 shouldBe Csv(1, 2, 3)
+      des2 shouldBe Csv("a", "b", "c")
+    }
+
+    it("should fail to deserialise improper types") {
+      val js1 = JsString("a, 1, 3")
+      val js2 = JsNumber(99)
+      val des1 = js1.asOpt[Csv[Int]]
+      val des2 = js2.asOpt[Csv[String]]
+      des1 shouldBe None
+      des2 shouldBe None
+    }
+
+    it("should unbind properly") {
+      val seq = Csv("a", "b", "c")
+      val js = Json.toJson(seq)
+      js shouldBe JsString("a,b,c")
+    }
+
   }
 
 }
