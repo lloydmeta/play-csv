@@ -2,12 +2,11 @@ package com.beachape.play
 
 import org.apache.commons.lang3.{ StringEscapeUtils, StringUtils }
 import play.api.data.Forms._
-import play.api.data.format.Formatter
+import play.api.data.format.{ Formatter, Formats }
 import play.api.data.{ Forms, FormError, Mapping }
-import play.api.data.format.Formats
 import play.api.mvc.{ PathBindable, QueryStringBindable }
 
-import scala.util.{ Success, Failure, Try }
+import scala.util.{ Success, Try }
 
 /**
  * For binding CSV query params without stomping on binding typeclasses for [[Seq]]
@@ -34,7 +33,7 @@ object Csv {
    *
    * Example:
    * {{{
-   * Form("hello" -> CsvSeq.mapping(number))
+   * Form("hello" -> Csv.mapping(number))
    * }}}
    */
   def mapping[A](mapping: Mapping[A]): Mapping[Csv[A]] = Forms.of(formatter(mapping))
@@ -48,18 +47,15 @@ object Csv {
       if (params.get(key).isEmpty) {
         None
       } else {
-        val trySeq = Try {
+        val tryBinds = Try {
           for {
             strings <- params.get(key).toSeq
             string <- strings
             rawValue <- split(string, ',')
             bound <- implicitly[QueryStringBindable[A]].bind(key, Map(key -> Seq(unescapeCsv(trim(rawValue)))))
-          } yield bound.right.get // This will throw if not all strings are bindable
+          } yield bound
         }
-        trySeq match {
-          case Success(seq) => Some(Right(Csv(seq: _*)))
-          case Failure(e) => Some(Left(s"Failed to bind all of ${params.get(key)} "))
-        }
+        Some(toEitherCsvOrElse(s"Failed to bind all of ${params.get(key)}")(tryBinds))
       }
     }
 
@@ -78,16 +74,8 @@ object Csv {
   implicit def pathStringBindable[A: PathBindable]: PathBindable[Csv[A]] = new PathBindable[Csv[A]] {
 
     def bind(key: String, value: String): Either[String, Csv[A]] = {
-      val tryCsvSeq = Try {
-        val seq = for {
-          rawValue <- split(value, ',')
-        } yield implicitly[PathBindable[A]].bind(key, unescapeCsv(trim(rawValue))).right.get
-        Csv(seq: _*)
-      }
-      tryCsvSeq match {
-        case Success(csv) => Right(csv)
-        case Failure(e) => Left(s"Could not bind $value into a CsvSeq")
-      }
+      val tryBinds = Try { split(value, ',').toSeq map (raw => implicitly[PathBindable[A]].bind(key, unescapeCsv(trim(raw)))) }
+      toEitherCsvOrElse(s"Could not bind $value into a Csv")(tryBinds)
     }
 
     def unbind(key: String, value: Csv[A]): String = {
@@ -98,19 +86,20 @@ object Csv {
     }
   }
 
-  private def formatter[A](mapping: Mapping[A]): Formatter[Csv[A]] = new Formatter[Csv[A]] {
+  private[this] def formatter[A](mapping: Mapping[A]): Formatter[Csv[A]] = new Formatter[Csv[A]] {
 
     def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Csv[A]] = {
       val elemBinder = mapping.withPrefix(key)
-      val tryBind = Try {
+      val tryEitherSeqEitherBinds = Try {
         Formats.stringFormat.bind(key, data).right.map { s =>
-          val seq = split(s, ',') map { p => elemBinder.bind(Map(key -> unescapeCsv(trim(p)))).right.get }
-          Csv(seq: _*)
+          split(s, ',').toSeq map { p => elemBinder.bind(Map(key -> unescapeCsv(trim(p)))) }
         }
       }
-      tryBind match {
-        case Success(Right(csvSeq)) => Right(csvSeq)
-        case _ => Left(Seq(FormError(key, "Could not bind CsvSeq", Nil)))
+      tryEitherSeqEitherBinds match {
+        case Success(Right(seqEitherBinds)) if seqEitherBinds.forall(_.isRight) => {
+          toEitherCsvOrElse(Seq(FormError(key, "Could not bind Csv", Nil)))(Success(seqEitherBinds))
+        }
+        case _ => Left(Seq(FormError(key, "Could not bind Csv", Nil)))
       }
     }
 
@@ -120,6 +109,20 @@ object Csv {
         vString <- mapping.unbind(v).values
       } yield escapeCsv(vString)
       Map(key -> elemStrings.mkString(","))
+    }
+  }
+
+  // The orElse comes first so we can let the compiler infer types
+  private[this] def toEitherCsvOrElse[A, B](orElse: => A)(tryBinds: Try[Seq[Either[A, B]]]): Either[A, Csv[B]] = {
+    tryBinds match {
+      case Success(seqEithers) if seqEithers.forall(_.isRight) => {
+        val seq = for {
+          either <- seqEithers
+          v <- either.right.toOption
+        } yield v
+        Right(Csv(seq: _*))
+      }
+      case _ => Left(orElse)
     }
   }
 
