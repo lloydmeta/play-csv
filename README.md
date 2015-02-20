@@ -1,4 +1,4 @@
-# CSV binders for Play [![Build Status](https://travis-ci.org/lloydmeta/play-csv.svg?branch=master)](https://travis-ci.org/lloydmeta/play-csv) [![Coverage Status](https://coveralls.io/repos/lloydmeta/play-csv/badge.svg?branch=master)](https://coveralls.io/r/lloydmeta/play-csv?branch=master)
+# CSV binders for Play [![Build Status](https://travis-ci.org/lloydmeta/play-csv.svg?branch=master)](https://travis-ci.org/lloydmeta/play-csv) [![Coverage Status](https://coveralls.io/repos/lloydmeta/play-csv/badge.svg?branch=master)](https://coveralls.io/r/lloydmeta/play-csv?branch=master) [![Codacy Badge](https://www.codacy.com/project/badge/011ba7adf75c4b26ac42dbd5e0d46f13)](https://www.codacy.com/public/lloydmeta/play-csv)
 
 If you're reading this, you probably know what you want: CSV path, query and form binders for
 your Play-based application.
