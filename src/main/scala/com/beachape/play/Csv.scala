@@ -55,7 +55,7 @@ object Csv {
             bound <- implicitly[QueryStringBindable[A]].bind(key, Map(key -> Seq(unescapeCsv(trim(rawValue)))))
           } yield bound
         }
-        Some(toEitherCsvOrElse(s"Failed to bind all of ${params.get(key)}")(tryBinds))
+        Some(transformOrElse(s"Failed to bind all of ${params.get(key)}")(tryBinds))
       }
     }
 
@@ -75,7 +75,7 @@ object Csv {
 
     def bind(key: String, value: String): Either[String, Csv[A]] = {
       val tryBinds = Try { split(value, ',').toSeq map (raw => implicitly[PathBindable[A]].bind(key, unescapeCsv(trim(raw)))) }
-      toEitherCsvOrElse(s"Could not bind $value into a Csv")(tryBinds)
+      transformOrElse(s"Could not bind $value into a Csv")(tryBinds)
     }
 
     def unbind(key: String, value: Csv[A]): String = {
@@ -97,7 +97,7 @@ object Csv {
       }
       tryEitherSeqEitherBinds match {
         case Success(Right(seqEitherBinds)) if seqEitherBinds.forall(_.isRight) => {
-          toEitherCsvOrElse(Seq(FormError(key, "Could not bind Csv", Nil)))(Success(seqEitherBinds))
+          transformOrElse(Seq(FormError(key, "Could not bind Csv", Nil)))(Success(seqEitherBinds))
         }
         case _ => Left(Seq(FormError(key, "Could not bind Csv", Nil)))
       }
@@ -113,7 +113,7 @@ object Csv {
   }
 
   // The orElse comes first so we can let the compiler infer types
-  private[this] def toEitherCsvOrElse[A, B](orElse: => A)(tryBinds: Try[Seq[Either[A, B]]]): Either[A, Csv[B]] = {
+  private[this] def transformOrElse[A, B](orElse: => A)(tryBinds: Try[Seq[Either[A, B]]]): Either[A, Csv[B]] = {
     tryBinds match {
       case Success(seqEithers) if seqEithers.forall(_.isRight) => {
         val seq = for {
