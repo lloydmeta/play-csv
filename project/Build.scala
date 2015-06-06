@@ -4,19 +4,20 @@ import sbt._
 import sbt.Keys._
 import com.typesafe.sbt.SbtScalariform._
 import scalariform.formatter.preferences._
+import play.sbt.routes.RoutesKeys._
 
 object Build extends Build {
 
   lazy val theVersion = "1.2-SNAPSHOT"
-  lazy val theScalaVersion = "2.11.5"
+  lazy val theScalaVersion = "2.11.6"
 
   lazy val root = Project(id = "root", base = file("."), settings = commonWithPublishSettings)
     .settings(
       name := "play-csv",
-      crossScalaVersions := Seq("2.10.4", "2.11.5"),
+      crossScalaVersions := Seq("2.10.5", "2.11.6"),
       crossVersion := CrossVersion.binary,
       libraryDependencies ++= Seq(
-        "com.typesafe.play" %% "play" % "2.3.7" % "provided",
+        "com.typesafe.play" %% "play" % "2.4.0" % "provided",
         "org.scalatest" %% "scalatest"  % "2.2.3" % Test
       )
     )
