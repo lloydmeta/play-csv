@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  app:
+    build: .
+    command: sbt sample/run
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/app
+    environment:
+      - SBT_OPTS=-Dsbt.boot.directory=.sbt -Dsbt.coursier.home=.coursier

@@ -13,7 +13,7 @@ You know why you want it:
 
 ```scala
 libraryDependencies ++= Seq(
-    "com.beachape" %% "play-csv" % "1.2"
+    "com.beachape" %% "play-csv" % "1.2.1"
 )
 ```
 
@@ -33,6 +33,16 @@ GET        /:ids                controllers.Application.hello(ids: Csv[Int])
 ```
 
 For more information, check out the project in the `sample` directory.
+
+## How-to run sample
+
+```
+docker compose up
+```
+
+```
+open http://localhost:9000
+```
 
 ## Licence
 
