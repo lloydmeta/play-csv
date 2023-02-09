@@ -1,12 +1,13 @@
 package com.beachape.play
 
-import org.scalatest.{ Matchers, FunSpec }
+import org.scalatest.funspec.AnyFunSpec
+import org.scalatest.matchers.should.Matchers
 import play.api.data.Form
 import play.api.data.Forms._
 import org.scalatest.OptionValues._
 import org.scalatest.EitherValues._
 
-class CsvSpec extends FunSpec with Matchers {
+class CsvSpec extends AnyFunSpec with Matchers {
 
   describe("query param binding") {
 
