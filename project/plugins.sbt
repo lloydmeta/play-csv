@@ -1,10 +1,8 @@
-resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
-
 // The Play plugin
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.6.25")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.7.9")
 
-addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.0.0")
+addSbtPlugin("com.github.sbt" % "sbt-pgp" % "2.2.1")
 
-addSbtPlugin("com.typesafe.sbt" % "sbt-scalariform" % "1.3.0")
+addSbtPlugin("org.scalariform" % "sbt-scalariform" % "1.8.0")
 
-addSbtPlugin("org.scoverage" %% "sbt-scoverage" % "1.6.1")
+addSbtPlugin("org.scoverage" %% "sbt-scoverage" % "1.7.0")

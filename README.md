@@ -11,6 +11,14 @@ You know why you want it:
 
 ## SBT
 
+### for play 2.7.x
+
+```scala
+libraryDependencies ++= Seq(
+    "com.beachape" %% "play-csv" % "1.5"
+)
+```
+
 ### for play 2.6.x
 
 ```scala
