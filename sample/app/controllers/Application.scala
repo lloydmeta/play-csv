@@ -3,10 +3,13 @@ package controllers
 import com.beachape.play.Csv
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.i18n.{ I18nSupport, MessagesApi }
 import play.api.mvc.{ Action, Controller }
 import play.twirl.api.Html
 
-object Application extends Controller {
+import javax.inject.Inject
+
+class Application @Inject() (val messagesApi: MessagesApi) extends Controller with I18nSupport {
 
   val form = Form("ids" -> Csv.mapping(number))
 
