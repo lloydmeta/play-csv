@@ -25,7 +25,8 @@ object Build extends Build {
   lazy val sample = Project(id = "sample", base = file("sample"), settings = commonSettings)
     .enablePlugins(PlayScala)
     .settings(
-      routesImport += "com.beachape.play.Csv"
+      routesImport += "com.beachape.play.Csv",
+      routesGenerator := InjectedRoutesGenerator
     ).dependsOn(root)
 
   lazy val commonWithPublishSettings =
