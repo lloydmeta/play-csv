@@ -1,5 +1,5 @@
-import play.PlayImport.PlayKeys._
-import play.PlayScala
+import play.sbt.PlayImport.PlayKeys._
+import play.sbt.PlayScala
 import sbt._
 import sbt.Keys._
 import com.typesafe.sbt.SbtScalariform._
@@ -8,16 +8,16 @@ import play.sbt.routes.RoutesKeys._
 
 object Build extends Build {
 
-  lazy val theVersion = "1.2.1-SNAPSHOT"
-  lazy val theScalaVersion = "2.11.6"
+  lazy val theVersion = "1.3"
+  lazy val theScalaVersion = "2.11.8"
 
   lazy val root = Project(id = "root", base = file("."), settings = commonWithPublishSettings)
     .settings(
       name := "play-csv",
-      crossScalaVersions := Seq("2.10.5", "2.11.6"),
+      crossScalaVersions := Seq("2.11.8"),
       crossVersion := CrossVersion.binary,
       libraryDependencies ++= Seq(
-        "com.typesafe.play" %% "play" % "2.4.0" % "provided",
+        "com.typesafe.play" %% "play" % "2.5.19" % "provided",
         "org.scalatest" %% "scalatest"  % "2.2.3" % Test
       )
     )
