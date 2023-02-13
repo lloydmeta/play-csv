@@ -15,3 +15,6 @@ dist
 /.settings
 /data
 /*.rdb
+.bsp
+.vscode
+.metals
