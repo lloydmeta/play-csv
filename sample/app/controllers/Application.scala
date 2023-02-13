@@ -49,15 +49,13 @@ class Application @Inject() (cc: ControllerComponents) extends AbstractControlle
             s"""
                |${helper.CSRF.formField}
                |${helper.inputText(form("ids"))}
-               |<button type='submit'>Submit</button>""".stripMargin
-          )
+               |<button type='submit'>Submit</button>""".stripMargin)
         }
       }
       |
       |</body>
       |</html>
-    """.stripMargin
-    ))
+    """.stripMargin))
   }
 
   def postForm = Action { implicit r =>
@@ -78,8 +76,7 @@ class Application @Inject() (cc: ControllerComponents) extends AbstractControlle
           | <p>${data.toSeq.mkString(",")}</p>
           |</body>
           |</html>
-        """.stripMargin))
-    )
+        """.stripMargin)))
   }
 
 }

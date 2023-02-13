@@ -25,4 +25,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: scoverage-report
-          path: target/scala-2.11/scoverage-report
+          path: target/scala-2.13/scoverage-report

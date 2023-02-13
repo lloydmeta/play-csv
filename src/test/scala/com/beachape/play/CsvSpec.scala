@@ -63,8 +63,7 @@ class CsvSpec extends AnyFunSpec with Matchers {
       val r = Seq(
         subject.bind(Map("hello" -> "AARSE")).value,
         subject.bind(Map("hello" -> "1,A,B")).value,
-        subject.bind(Map("hello" -> "99.9, 3, 33")).value
-      )
+        subject.bind(Map("hello" -> "99.9, 3, 33")).value)
       r.forall(_ == None) shouldBe true
     }
 
