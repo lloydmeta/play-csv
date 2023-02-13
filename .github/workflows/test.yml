@@ -8,7 +8,8 @@ jobs:
     strategy:
       matrix:
         java_version: [
-          8
+          8,
+          11
         ]
     steps:
       - name: Checkout
@@ -20,7 +21,7 @@ jobs:
           java-version: ${{ matrix.java_version }}
           cache: sbt
       - name: Test and coverage
-        run: sbt clean "project sample" compile "project root" coverage +test; sbt coverageReport
+        run: sbt clean sample/compile coverage +test; sbt coverageReport
       - name: Archive coverage
         uses: actions/upload-artifact@v3
         with:

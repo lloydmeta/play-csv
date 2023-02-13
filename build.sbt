@@ -1,19 +1,19 @@
 import scalariform.formatter.preferences._
-import com.typesafe.sbt.SbtScalariform
 import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 
 lazy val theVersion = "1.6-SNAPSHOT"
-lazy val theScalaVersion = "2.13.5"
+lazy val theScalaVersion = "2.13.8"
 
 lazy val root = Project(id = "root", base = file("."))
   .settings(commonWithPublishSettings)
   .settings(
     name := "play-csv",
-    crossScalaVersions := Seq("2.13.5", "2.12.13"),
+    crossScalaVersions := Seq("2.13.8", "2.12.15"),
     crossVersion := CrossVersion.binary,
     libraryDependencies ++= Seq(
       "org.apache.commons" % "commons-lang3" % "3.12.0",
-      "com.typesafe.play" %% "play" % "2.7.9" % Provided,
+      "org.apache.commons" % "commons-text" % "1.10.0",
+      "com.typesafe.play" %% "play" % "2.8.19" % Provided,
       "org.scalatest" %% "scalatest"  % "3.2.15" % Test
     )
   )
@@ -34,9 +34,9 @@ lazy val commonSettings = Seq(
   organization := "com.beachape",
   version := theVersion,
   scalaVersion := theScalaVersion,
-  testOptions in Test += Tests.Argument("-oF")
+  Test / testOptions += Tests.Argument("-oF")
 ) ++
-  SbtScalariform.scalariformSettings ++
+  scalariformSettings(true) ++
   formatterPrefs ++
   compilerSettings
 
@@ -79,6 +79,6 @@ lazy val publishSettings = Seq(
       Some("releases"  at s"${nexus}service/local/staging/deploy/maven2")
   }.value,
   publishMavenStyle := true,
-  publishArtifact in Test := false,
+  Test / publishArtifact := false,
   pomIncludeRepository := { _ => false }
 )

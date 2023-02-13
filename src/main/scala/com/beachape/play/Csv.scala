@@ -1,7 +1,7 @@
 package com.beachape.play
 
-import org.apache.commons.lang3.{ StringEscapeUtils, StringUtils }
-import play.api.data.Forms._
+import org.apache.commons.lang3.StringUtils
+import org.apache.commons.text.StringEscapeUtils
 import play.api.data.format.{ Formatter, Formats }
 import play.api.data.{ Forms, FormError, Mapping }
 import play.api.mvc.{ PathBindable, QueryStringBindable }
@@ -91,7 +91,7 @@ object Csv {
     def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Csv[A]] = {
       val elemBinder = mapping.withPrefix(key)
       val tryEitherSeqEitherBinds = Try {
-        Formats.stringFormat.bind(key, data).right.map { s =>
+        Formats.stringFormat.bind(key, data).map { s =>
           split(s, ',').toSeq map { p => elemBinder.bind(Map(key -> unescapeCsv(trim(p)))) }
         }
       }
@@ -118,7 +118,7 @@ object Csv {
       case Success(seqEithers) if seqEithers.forall(_.isRight) => {
         val seq = for {
           either <- seqEithers
-          v <- either.right.toOption
+          v <- either.toOption
         } yield v
         Right(Csv(seq: _*))
       }
