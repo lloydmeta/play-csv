@@ -1,7 +1,7 @@
 import scalariform.formatter.preferences._
 import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 
-lazy val theVersion = "1.6-SNAPSHOT"
+lazy val theVersion = "1.6"
 lazy val theScalaVersion = "2.13.8"
 
 lazy val root = Project(id = "root", base = file("."))
