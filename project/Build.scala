@@ -1,4 +1,4 @@
-import play.sbt.PlayImport.PlayKeys._
+import play.sbt.PlayImport._
 import play.sbt.PlayScala
 import sbt._
 import sbt.Keys._
@@ -9,24 +9,24 @@ import play.sbt.routes.RoutesKeys._
 object Build extends Build {
 
   lazy val theVersion = "1.4-SNAPSHOT"
-  lazy val theScalaVersion = "2.11.8"
+  lazy val theScalaVersion = "2.11.12"
 
   lazy val root = Project(id = "root", base = file("."), settings = commonWithPublishSettings)
     .settings(
       name := "play-csv",
-      crossScalaVersions := Seq("2.11.8"),
+      crossScalaVersions := Seq("2.11.12"),
       crossVersion := CrossVersion.binary,
       libraryDependencies ++= Seq(
-        "com.typesafe.play" %% "play" % "2.5.19" % "provided",
-        "org.scalatest" %% "scalatest"  % "2.2.3" % Test
+        "com.typesafe.play" %% "play" % "2.6.25" % "provided",
+        "org.scalatest" %% "scalatest"  % "3.2.15" % Test
       )
     )
 
   lazy val sample = Project(id = "sample", base = file("sample"), settings = commonSettings)
     .enablePlugins(PlayScala)
     .settings(
-      routesImport += "com.beachape.play.Csv",
-      routesGenerator := InjectedRoutesGenerator
+      libraryDependencies += guice,
+      routesImport += "com.beachape.play.Csv"
     ).dependsOn(root)
 
   lazy val commonWithPublishSettings =
@@ -82,13 +82,13 @@ object Build extends Build {
           <url>http://lloydmeta.github.io</url>
         </developer>
       </developers>,
-    publishTo <<= version { v =>
+    publishTo := version { v =>
       val nexus = "https://oss.sonatype.org/"
       if (v.trim.endsWith("SNAPSHOT"))
         Some("snapshots" at nexus + "content/repositories/snapshots")
       else
         Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-    },
+    }.value,
     publishMavenStyle := true,
     publishArtifact in Test := false,
     pomIncludeRepository := { _ => false }

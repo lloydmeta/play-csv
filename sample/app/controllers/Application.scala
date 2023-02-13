@@ -3,13 +3,13 @@ package controllers
 import com.beachape.play.Csv
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.{ I18nSupport, MessagesApi }
-import play.api.mvc.{ Action, Controller }
+import play.api.i18n.I18nSupport
+import play.api.mvc.{ AbstractController, ControllerComponents }
 import play.twirl.api.Html
 
 import javax.inject.Inject
 
-class Application @Inject() (val messagesApi: MessagesApi) extends Controller with I18nSupport {
+class Application @Inject() (cc: ControllerComponents) extends AbstractController(cc) with I18nSupport {
 
   val form = Form("ids" -> Csv.mapping(number))
 
@@ -37,7 +37,7 @@ class Application @Inject() (val messagesApi: MessagesApi) extends Controller wi
       """.stripMargin))
   }
 
-  def showForm = Action {
+  def showForm = Action { implicit r =>
     import views.html.helper
     Ok(Html(
       s"""
@@ -47,6 +47,7 @@ class Application @Inject() (val messagesApi: MessagesApi) extends Controller wi
         helper.form(controllers.routes.Application.postForm) {
           Html(
             s"""
+               |${helper.CSRF.formField}
                |${helper.inputText(form("ids"))}
                |<button type='submit'>Submit</button>""".stripMargin
           )
