@@ -8,7 +8,7 @@ import play.sbt.routes.RoutesKeys._
 
 object Build extends Build {
 
-  lazy val theVersion = "1.4"
+  lazy val theVersion = "1.5-SNAPSHOT"
   lazy val theScalaVersion = "2.11.12"
 
   lazy val root = Project(id = "root", base = file("."), settings = commonWithPublishSettings)
