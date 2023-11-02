@@ -1,4 +1,4 @@
-lazy val theVersion = "1.7-SNAPSHOT"
+lazy val theVersion = "1.7"
 lazy val theScalaVersion = "2.13.12"
 
 lazy val root = Project(id = "root", base = file("."))
