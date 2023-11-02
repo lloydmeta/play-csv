@@ -13,13 +13,31 @@ class CsvSpec extends AnyFunSpec with Matchers {
 
     val subject = Csv.queryStringBindable[Int]
 
-    it("should create a binder that can bind strings corresponding the proper type") {
-      subject.bind("hello", Map("hello" -> Seq("1,2,3"))).value.value shouldBe Csv(1, 2, 3)
-      subject.bind("hello", Map("hello" -> Seq("1"))).value.value shouldBe Csv(1)
+    it(
+      "should create a binder that can bind strings corresponding the proper type"
+    ) {
+      subject
+        .bind("hello", Map("hello" -> Seq("1,2,3")))
+        .value
+        .value shouldBe Csv(1, 2, 3)
+      subject.bind("hello", Map("hello" -> Seq("1"))).value.value shouldBe Csv(
+        1
+      )
     }
 
-    it("should create a binder that cannot bind strings that don't correspond to the proper type") {
-      subject.bind("hello", Map("hello" -> Seq("this is the song that never ends, yes 1t goes on and on my friend"))).value should be(Symbol("left"))
+    it(
+      "should create a binder that cannot bind strings that don't correspond to the proper type"
+    ) {
+      subject
+        .bind(
+          "hello",
+          Map(
+            "hello" -> Seq(
+              "this is the song that never ends, yes 1t goes on and on my friend"
+            )
+          )
+        )
+        .value should be(Symbol("left"))
       subject.bind("hello", Map("helloz" -> Seq("1.2, 3.4"))) shouldBe None
     }
 
@@ -34,13 +52,22 @@ class CsvSpec extends AnyFunSpec with Matchers {
 
     val subject = Csv.pathStringBindable[Int]
 
-    it("should create a binder that can bind strings corresponding the proper type") {
+    it(
+      "should create a binder that can bind strings corresponding the proper type"
+    ) {
       subject.bind("hello", "1,2,3").value shouldBe Csv(1, 2, 3)
       subject.bind("hello", "1").value shouldBe Csv(1)
     }
 
-    it("should create a binder that cannot bind strings that don't correspond to the proper type") {
-      subject.bind("hello", "this is the song that never ends, yes 1t goes on and on my friend").isLeft shouldBe true
+    it(
+      "should create a binder that cannot bind strings that don't correspond to the proper type"
+    ) {
+      subject
+        .bind(
+          "hello",
+          "this is the song that never ends, yes 1t goes on and on my friend"
+        )
+        .isLeft shouldBe true
       subject.bind("hello", "1.2, 3.4").isLeft shouldBe true
     }
 
@@ -63,7 +90,8 @@ class CsvSpec extends AnyFunSpec with Matchers {
       val r = Seq(
         subject.bind(Map("hello" -> "AARSE")).value,
         subject.bind(Map("hello" -> "1,A,B")).value,
-        subject.bind(Map("hello" -> "99.9, 3, 33")).value)
+        subject.bind(Map("hello" -> "99.9, 3, 33")).value
+      )
       r.forall(_ == None) shouldBe true
     }
 

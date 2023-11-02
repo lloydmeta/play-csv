@@ -8,18 +8,21 @@ jobs:
     strategy:
       matrix:
         java_version: [
-          8,
-          11
+          11,
+          17,
+          21
         ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Scala
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: ${{ matrix.java_version }}
           cache: sbt
+      - name: Format
+        run: sbt scalafmtAll sample/scalafmtAll scalafmtSbt
       - name: Test and coverage
         run: sbt clean sample/compile coverage +test; sbt coverageReport
       - name: Archive coverage
