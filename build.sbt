@@ -1,4 +1,4 @@
-lazy val theVersion = "1.8-SNAPSHOT"
+lazy val theVersion = "2.0-SNAPSHOT"
 lazy val theScalaVersion = "2.13.12"
 
 lazy val root = Project(id = "root", base = file("."))
@@ -10,7 +10,7 @@ lazy val root = Project(id = "root", base = file("."))
     libraryDependencies ++= Seq(
       "org.apache.commons" % "commons-lang3" % "3.13.0",
       "org.apache.commons" % "commons-text" % "1.11.0",
-      "com.typesafe.play" %% "play" % "2.9.0" % Provided,
+      "org.playframework" %% "play" % "3.0.0" % Provided,
       "org.scalatest" %% "scalatest" % "3.2.17" % Test
     )
   )
